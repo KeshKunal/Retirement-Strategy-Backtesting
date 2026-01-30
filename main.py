@@ -13,23 +13,28 @@ googl['Date'] = pd.to_datetime(googl['Date'])
 googl['Year'] = googl['Date'].dt.year
 GOOGL_prices = googl.groupby('Year')['Close'].last().to_dict()
 
-def simulate(start_year, cpwr=0.03, min_spend=250000, buffer_years=5):
+def simulate(start_year, cpwr=0.04, min_spend=250000, buffer_years=5):
     """
     CPWR + Firewall Strategy Implementation
     
+    Strategy Definition:
+    "Spending is set by CPWR with a hard floor and funded from a cash firewall; 
+    equity is sold only in positive-return years to refill the buffer, and any 
+    need to sell during drawdowns constitutes strategy failure."
+    
     Rules:
-    1. Spending = max(CPWR × Portfolio, $250k floor)
-    2. Fund spending from cash FIRST
-    3. Apply market returns
+    1. Determine market regime FIRST (UP/DOWN year)
+    2. Spending = max(CPWR × Equity, $250k floor) - funded from cash ONLY
+    3. Apply market returns (Equity + Cash 2%)
     4. Refill cash buffer ONLY in UP years
-    5. Never sell equity in DOWN years (unless forced emergency)
+    5. NEVER sell equity in DOWN years - immediate failure if needed
     """
     # Initialize portfolio
     cash_target = buffer_years * min_spend
     initial_total = 10000000
     cash = cash_target
     
-    # Get initial prices
+    # Get initial prices (year BEFORE start)
     prev_year = start_year - 1
     if prev_year not in SPY_prices:
         return None, f"No data for year {prev_year}"
@@ -39,123 +44,159 @@ def simulate(start_year, cpwr=0.03, min_spend=250000, buffer_years=5):
     
     # Determine initial allocation
     initial_equity = initial_total - cash
-    if googl_price_prev is not None:
-        # 80/20 split
+    if prev_year >= 2004 and googl_price_prev is not None:
+        # 80/20 split if GOOGL data exists
         shares_spy = (initial_equity * 0.8) / spy_price_prev
         shares_googl = (initial_equity * 0.2) / googl_price_prev
     else:
-        # 100% SPY before 2004
+        # 100% SPY before 2004 or if no GOOGL data
         shares_spy = initial_equity / spy_price_prev
         shares_googl = 0
     
     results = []
     success = True
     current_year = start_year
+    failure_reason = None
+    results = []
+    success = True
+    current_year = start_year
+    failure_reason = None
     
     while current_year <= max(int(k) for k in SPY_prices.keys()):
         # Check if we have data for current year
         if current_year not in SPY_prices:
             break
         
-        # Get current year prices
-        spy_price = SPY_prices[current_year]
-        googl_price = GOOGL_prices.get(current_year, None)
+        # ═══════════════════════════════════════════════════════════════
+        # STEP 1: Read prices and determine market regime
+        # ═══════════════════════════════════════════════════════════════
+        spy_price_current = SPY_prices[current_year]
+        googl_price_current = GOOGL_prices.get(current_year, None)
         
-        # Calculate equity value at start of year (before any transactions)
+        # Calculate equity value at START of year (using previous year's prices)
         equity_start = shares_spy * spy_price_prev + shares_googl * (googl_price_prev if googl_price_prev else 0)
-        total_start = equity_start + cash
         
-        # STEP 1: Determine spending amount
-        proposed = cpwr * total_start
+        # Calculate annual equity return to determine market regime
+        spy_return = (spy_price_current - spy_price_prev) / spy_price_prev if spy_price_prev > 0 else 0
+        
+        # CRITICAL: Determine if this is a DOWN year BEFORE any other decisions
+        is_down_year = spy_return < 0
+        
+        # ═══════════════════════════════════════════════════════════════
+        # STEP 2: Determine spending (CPWR base = equity value)
+        # ═══════════════════════════════════════════════════════════════
+        # Using Option A (Preferred/textbook): CPWR × Equity
+        proposed = cpwr * equity_start
         spending = max(proposed, min_spend)
         
-        # STEP 2: Withdraw spending from cash
-        sold_low = False
-        forced_sale = False
+        # ═══════════════════════════════════════════════════════════════
+        # STEP 3: Attempt to withdraw spending from cash
+        # ═══════════════════════════════════════════════════════════════
+        buffer_depleted = False
         
         if cash >= spending:
             # Normal case: cash covers spending
             cash -= spending
         else:
-            # Emergency: insufficient cash
-            deficit = spending - cash
-            cash = 0
-            
-            # Must sell equity (forced sale)
-            if equity_start >= deficit:
-                # Sell proportionally from holdings
-                sell_fraction = deficit / equity_start
-                shares_spy -= shares_spy * sell_fraction
-                shares_googl -= shares_googl * sell_fraction
-                forced_sale = True
-            else:
-                # Cannot even meet spending - FAILURE
-                spending = cash + equity_start
-                shares_spy = 0
-                shares_googl = 0
+            # CRITICAL: Insufficient cash
+            if is_down_year:
+                # FAILURE: Cannot sell equity in DOWN years
                 success = False
+                failure_reason = f"Insufficient cash in DOWN year {current_year} (needed ${spending:,.0f}, had ${cash:,.0f})"
+                spending = cash  # Spend what we have
+                cash = 0
+                
+                # Record this year and TERMINATE
+                results.append({
+                    'Year': current_year,
+                    'Equity': round(equity_start, 2),
+                    'Cash': round(cash, 2),
+                    'Total': round(equity_start + cash, 2),
+                    'Proposed': round(proposed, 2),
+                    'Spending': round(spending, 2),
+                    'Down Year': is_down_year,
+                    'Buffer Depleted': True,
+                    'Refill Event': False,
+                    'Equity Return': round(spy_return * 100, 2)
+                })
+                break  # TERMINATE SIMULATION
+            else:
+                # UP year but insufficient cash - mark buffer depletion
+                buffer_depleted = True
+                spending = cash  # Spend what we have for now
+                cash = 0
         
-        # STEP 3: Apply market returns
-        # Calculate equity return for market regime
-        spy_return = (spy_price - spy_price_prev) / spy_price_prev if spy_price_prev > 0 else 0
-        equity_return = spy_return  # Simplified: use SPY as proxy for portfolio return
+        # ═══════════════════════════════════════════════════════════════
+        # STEP 4: Apply market returns
+        # ═══════════════════════════════════════════════════════════════
+        # Update prices to end-of-year
+        spy_price_prev = spy_price_current
+        googl_price_prev = googl_price_current
         
-        # Mark if this was a down year
-        is_down_year = equity_return < 0
-        if forced_sale and is_down_year:
-            sold_low = True
+        # Equity value after market returns
+        equity_after_return = shares_spy * spy_price_current + shares_googl * (googl_price_current if googl_price_current else 0)
         
-        # Update share prices to end-of-year
-        spy_price_prev = spy_price
-        googl_price_prev = googl_price
-        
-        # Calculate equity value after returns
-        equity_after_return = shares_spy * spy_price + shares_googl * (googl_price if googl_price else 0)
-        
-        # Apply 2% return to cash
+        # Apply 2% annual return to cash
         cash *= 1.02
         
-        # STEP 4: Refill cash buffer (ONLY in UP years)
+        # ═══════════════════════════════════════════════════════════════
+        # STEP 5: Refill cash buffer (ONLY in UP years)
+        # ═══════════════════════════════════════════════════════════════
+        refill_event = False
+        
         if not is_down_year and cash < cash_target:
+            # UP year and cash below target - refill allowed
             refill_needed = cash_target - cash
             
             if equity_after_return >= refill_needed:
-                # Sell equity proportionally to refill
+                # Sell equity proportionally to refill buffer
                 sell_fraction = refill_needed / equity_after_return
                 shares_spy -= shares_spy * sell_fraction
                 shares_googl -= shares_googl * sell_fraction
+                
                 cash += refill_needed
                 equity_after_return -= refill_needed
+                refill_event = True
+            else:
+                # Not enough equity to fully refill - this could lead to failure
+                # Sell all equity if desperate, but this is likely terminal
+                if equity_after_return > 0:
+                    success = False
+                    failure_reason = f"Insufficient equity to refill buffer in year {current_year}"
+                    break
         
-        # STEP 5: Rebalance to 80/20 (if GOOGL exists and we just crossed into 2004)
-        if googl_price is not None and shares_googl == 0 and current_year >= 2004:
-            # First year with GOOGL available - rebalance to 80/20
-            equity_value = shares_spy * spy_price
-            target_googl = 0.2 * equity_value
-            shares_googl = target_googl / googl_price
-            shares_spy -= target_googl / spy_price
+        # ═══════════════════════════════════════════════════════════════
+        # STEP 6: Rebalance to 80/20 (if GOOGL available and UP year)
+        # ═══════════════════════════════════════════════════════════════
+        # First-time allocation to GOOGL if we just crossed into 2004+
+        if current_year >= 2004 and googl_price_current is not None and shares_googl == 0 and not is_down_year:
+            equity_value = shares_spy * spy_price_current
+            if equity_value > 0:
+                target_googl_value = 0.2 * equity_value
+                shares_googl = target_googl_value / googl_price_current
+                shares_spy = (equity_value - target_googl_value) / spy_price_current
+                equity_after_return = equity_value  # No change in total
         
-        # Annual rebalance to maintain 80/20 (if GOOGL exists)
-        if googl_price is not None and shares_googl > 0:
-            spy_value = shares_spy * spy_price
-            googl_value = shares_googl * googl_price
+        # Annual rebalance to maintain 80/20 (only in UP years to avoid trading costs in down markets)
+        if googl_price_current is not None and shares_googl > 0 and not is_down_year:
+            spy_value = shares_spy * spy_price_current
+            googl_value = shares_googl * googl_price_current
             total_equity = spy_value + googl_value
             
-            target_spy_value = 0.8 * total_equity
-            rebalance_amount = target_spy_value - spy_value
-            
-            if abs(rebalance_amount) > 0.01 * total_equity:  # Only rebalance if >1% drift
-                if rebalance_amount > 0:
-                    # Buy SPY, sell GOOGL
-                    shares_spy += rebalance_amount / spy_price
-                    shares_googl -= rebalance_amount / googl_price
-                else:
-                    # Sell SPY, buy GOOGL
-                    shares_spy += rebalance_amount / spy_price
-                    shares_googl -= rebalance_amount / googl_price
+            if total_equity > 0:
+                target_spy_value = 0.8 * total_equity
+                drift = abs(target_spy_value - spy_value) / total_equity
+                
+                # Only rebalance if drift > 1%
+                if drift > 0.01:
+                    rebalance_amount = target_spy_value - spy_value
+                    shares_spy = target_spy_value / spy_price_current
+                    shares_googl = (total_equity - target_spy_value) / googl_price_current
         
-        # Calculate final values
-        equity_end = shares_spy * spy_price + shares_googl * (googl_price if googl_price else 0)
+        # ═══════════════════════════════════════════════════════════════
+        # STEP 7: Calculate final values and check failure conditions
+        # ═══════════════════════════════════════════════════════════════
+        equity_end = shares_spy * spy_price_current + shares_googl * (googl_price_current if googl_price_current else 0)
         total_end = equity_end + cash
         
         # Record results
@@ -167,17 +208,27 @@ def simulate(start_year, cpwr=0.03, min_spend=250000, buffer_years=5):
             'Proposed': round(proposed, 2),
             'Spending': round(spending, 2),
             'Down Year': is_down_year,
-            'Sold Low': sold_low,
-            'Forced Sale': forced_sale,
-            'Equity Return': round(equity_return * 100, 2)
+            'Buffer Depleted': buffer_depleted,
+            'Refill Event': refill_event,
+            'Equity Return': round(spy_return * 100, 2)
         })
         
-        # STEP 6: Check failure conditions
-        if total_end < min_spend or spending < min_spend:
+        # Check failure conditions
+        if total_end <= 0:
             success = False
+            failure_reason = f"Portfolio depleted in year {current_year}"
+            break
+        
+        if total_end < min_spend:
+            success = False
+            failure_reason = f"Portfolio below minimum spend threshold in year {current_year}"
             break
         
         current_year += 1
+    
+    # Add failure reason to results if failed
+    if not success and failure_reason:
+        print(f"  ⚠️  {failure_reason}")
     
     return results, success
 
@@ -219,33 +270,37 @@ def visualize_simulation(df, start_year, success):
     
     # 3. Spending Analysis
     ax3 = fig.add_subplot(gs[1, 1])
-    colors = [spending_color if not sold else '#8B0000' for sold in df['Sold Low']]
+    colors = ['#8B0000' if depleted else spending_color for depleted in df['Buffer Depleted']]
     ax3.bar(df['Year'], df['Spending']/1000, color=colors, alpha=0.7, edgecolor='black', linewidth=0.5)
     ax3.plot(df['Year'], df['Proposed']/1000, color='green', linewidth=2, marker='d', markersize=4, label='Proposed (CPWR)')
     ax3.axhline(y=250, color='red', linestyle='--', linewidth=2, alpha=0.7, label='Floor ($250k)')
     ax3.set_xlabel('Year', fontsize=10, fontweight='bold')
     ax3.set_ylabel('Spending ($k)', fontsize=10, fontweight='bold')
-    ax3.set_title('Annual Spending (Red bars = Sold Low)', fontsize=12, fontweight='bold')
+    ax3.set_title('Annual Spending (Dark Red = Buffer Depleted)', fontsize=12, fontweight='bold')
     ax3.legend(loc='best', framealpha=0.9)
     ax3.grid(True, alpha=0.3, axis='y')
     
     # 4. Market Regime & Actions
     ax4 = fig.add_subplot(gs[2, 0])
     down_years = df[df['Down Year'] == True]['Year']
-    sold_low_years = df[df['Sold Low'] == True]['Year']
-    forced_years = df[df['Forced Sale'] == True]['Year']
+    buffer_depleted_years = df[df['Buffer Depleted'] == True]['Year']
+    refill_years = df[df['Refill Event'] == True]['Year']
     
     ax4.bar(df['Year'], df['Equity Return'], color=['red' if x < 0 else 'green' for x in df['Equity Return']], 
             alpha=0.6, edgecolor='black', linewidth=0.5)
     
-    # Mark problematic events
-    for year in sold_low_years:
+    # Mark critical events
+    for year in buffer_depleted_years:
         ax4.axvline(x=year, color='darkred', linestyle='--', alpha=0.8, linewidth=2)
+    
+    for year in refill_years:
+        year_data = df[df['Year'] == year]
+        ax4.scatter(year, year_data['Equity Return'].values[0], color='blue', s=80, zorder=5, marker='o')
     
     ax4.axhline(y=0, color='black', linestyle='-', linewidth=1)
     ax4.set_xlabel('Year', fontsize=10, fontweight='bold')
     ax4.set_ylabel('Equity Return (%)', fontsize=10, fontweight='bold')
-    ax4.set_title('Market Returns (Dashed lines = Sold Low)', fontsize=12, fontweight='bold')
+    ax4.set_title('Market Returns (Dashed = Buffer Depleted, Blue = Refill)', fontsize=12, fontweight='bold')
     ax4.grid(True, alpha=0.3, axis='y')
     
     # 5. Summary Statistics
@@ -259,8 +314,8 @@ def visualize_simulation(df, start_year, success):
     max_portfolio = df['Total'].max()
     final_portfolio = df['Total'].iloc[-1]
     years_survived = len(df)
-    sold_low_count = df['Sold Low'].sum()
-    forced_sale_count = df['Forced Sale'].sum()
+    buffer_depleted_count = df['Buffer Depleted'].sum()
+    refill_count = df['Refill Event'].sum()
     down_year_count = df['Down Year'].sum()
     
     stats_text = f"""
@@ -288,8 +343,8 @@ def visualize_simulation(df, start_year, success):
     RISK EVENTS
     {'─'*40}
     Down Years:         {down_year_count:>12}
-    Sold Low:           {sold_low_count:>12}
-    Forced Sales:       {forced_sale_count:>12}
+    Buffer Depleted:    {buffer_depleted_count:>12}
+    Refill Events:      {refill_count:>12}
     """
     
     ax5.text(0.05, 0.95, stats_text, transform=ax5.transAxes, 
@@ -308,7 +363,7 @@ print("Initial Portfolio: $10,000,000 | CPWR: 4% | Floor: $250,000 | Buffer: 5 y
 print("="*80)
 print()
 
-start_years = [2010]
+start_years = [1999, 2000, 2007, 2010]
 all_results = {}
 
 for start in start_years:
@@ -329,8 +384,9 @@ for start in start_years:
     print(f"\nStatus: {'✓ SUCCESS' if success else '✗ FAILED'}")
     print(f"Years Survived: {len(df)}")
     print(f"Final Portfolio: ${df['Total'].iloc[-1]:,.0f}")
-    print(f"Sold Low Events: {df['Sold Low'].sum()}")
-    print(f"Forced Sales: {df['Forced Sale'].sum()}")
+    print(f"Buffer Depleted Events: {df['Buffer Depleted'].sum()}")
+    print(f"Refill Events: {df['Refill Event'].sum()}")
+    print(f"Down Years: {df['Down Year'].sum()}")
     
     # Print detailed table
     print("\nDetailed Results:")
@@ -362,8 +418,8 @@ if len(all_results) > 1:
         ax.fill_between(df['Year'], df['Equity']/1e6, df['Total']/1e6, alpha=0.5, color='#A23B72', label='Cash')
         
         # Mark sold low events
-        sold_low_years = df[df['Sold Low'] == True]['Year']
-        for year in sold_low_years:
+        buffer_depleted_years = df[df['Buffer Depleted'] == True]['Year']
+        for year in buffer_depleted_years:
             year_data = df[df['Year'] == year]
             ax.scatter(year, year_data['Total'].values[0]/1e6, color='red', s=100, zorder=5, marker='X')
         
