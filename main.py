@@ -11,9 +11,9 @@ SPY_prices = spy.groupby('Year')['Close'].last().to_dict()
 googl = pd.read_csv('DataSet/googl.csv')
 googl['Date'] = pd.to_datetime(googl['Date'])
 googl['Year'] = googl['Date'].dt.year
-GOOGL_prices = googl.groupby('Year')['Close'].last().to_dict()
+GOOGL_prices = googl.groupby('Year')['Close'].last().to_dict()  # makes dictionary of end of year closing prices
 
-def simulate(start_year, cpwr=0.04, min_spend=250000, buffer_years=5):
+def simulate(start_year):
     """
     CPWR + Firewall Strategy Implementation
     
@@ -29,6 +29,11 @@ def simulate(start_year, cpwr=0.04, min_spend=250000, buffer_years=5):
     4. Refill cash buffer ONLY in UP years
     5. NEVER sell equity in DOWN years - immediate failure if needed
     """
+    #Constants
+    cpwr=0.04
+    min_spend=250000
+    buffer_years=5
+    
     # Initialize portfolio
     cash_target = buffer_years * min_spend
     initial_total = 10000000
@@ -57,10 +62,6 @@ def simulate(start_year, cpwr=0.04, min_spend=250000, buffer_years=5):
     success = True
     current_year = start_year
     failure_reason = None
-    results = []
-    success = True
-    current_year = start_year
-    failure_reason = None
     
     while current_year <= max(int(k) for k in SPY_prices.keys()):
         # Check if we have data for current year
@@ -85,7 +86,7 @@ def simulate(start_year, cpwr=0.04, min_spend=250000, buffer_years=5):
         # ═══════════════════════════════════════════════════════════════
         # STEP 2: Determine spending (CPWR base = equity value)
         # ═══════════════════════════════════════════════════════════════
-        # Using Option A (Preferred/textbook): CPWR × Equity
+        # CPWR × Equity
         proposed = cpwr * equity_start
         spending = max(proposed, min_spend)
         
@@ -119,7 +120,7 @@ def simulate(start_year, cpwr=0.04, min_spend=250000, buffer_years=5):
                     'Refill Event': False,
                     'Equity Return': round(spy_return * 100, 2)
                 })
-                break  # TERMINATE SIMULATION
+                break
             else:
                 # UP year but insufficient cash - mark buffer depletion
                 buffer_depleted = True
@@ -363,7 +364,7 @@ print("Initial Portfolio: $10,000,000 | CPWR: 4% | Floor: $250,000 | Buffer: 5 y
 print("="*80)
 print()
 
-start_years = [1999, 2000, 2007, 2010]
+start_years = [1999, 2000]
 all_results = {}
 
 for start in start_years:
