@@ -1,8 +1,8 @@
-*.png
+
 *.md
 notes.txt
 .venv
 .github
 __pycache__
-test_run.py
 /DataSet/*.csv
+results
