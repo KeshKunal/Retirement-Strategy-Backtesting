@@ -1,7 +1,7 @@
-
-*.md
 notes.txt
 .venv
 .github
 __pycache__
 /DataSet/*.csv
+IMPLEMENTATION_SUMMARY.md
+STRATEGY_COMPARISON.md
