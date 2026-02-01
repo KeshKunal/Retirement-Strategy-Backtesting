@@ -234,7 +234,6 @@ def simulate(start_year):
     return results, success
 
 def visualize_simulation(df, start_year, success):
-    """Create comprehensive visualization of the simulation"""
     fig = plt.figure(figsize=(16, 10))
     gs = fig.add_gridspec(3, 2, hspace=0.3, wspace=0.3)
     
@@ -364,7 +363,7 @@ print("Initial Portfolio: $10,000,000 | CPWR: 4% | Floor: $250,000 | Buffer: 5 y
 print("="*80)
 print()
 
-start_years = [1999, 2000]
+start_years = np.arange(2025,2027,1)
 all_results = {}
 
 for start in start_years:
@@ -389,11 +388,29 @@ for start in start_years:
     print(f"Refill Events: {df['Refill Event'].sum()}")
     print(f"Down Years: {df['Down Year'].sum()}")
     
-    # Print detailed table
-    print("\nDetailed Results:")
-    display_df = df.copy()
-    display_df[['Equity', 'Cash', 'Total', 'Proposed', 'Spending']] = display_df[['Equity', 'Cash', 'Total', 'Proposed', 'Spending']].round(0)
-    print(display_df.to_markdown(index=False, numalign="right", stralign="right", floatfmt=".0f"))
+    # Save detailed results to text file
+    with open(f'results_{start}_{'SUCCESS' if success else 'FAILED'}.txt', 'w', encoding='utf-8') as f:
+        f.write("="*80 + "\n")
+        f.write(f"CPWR + FIREWALL STRATEGY - DETAILED RESULTS\n")
+        f.write(f"Starting Year: {start}\n")
+        f.write("="*80 + "\n\n")
+        
+        f.write(f"Status: {'✓ SUCCESS' if success else '✗ FAILED'}\n")
+        f.write(f"Years Survived: {len(df)}\n")
+        f.write(f"Final Portfolio: ${df['Total'].iloc[-1]:,.0f}\n")
+        f.write(f"Buffer Depleted Events: {df['Buffer Depleted'].sum()}\n")
+        f.write(f"Refill Events: {df['Refill Event'].sum()}\n")
+        f.write(f"Down Years: {df['Down Year'].sum()}\n\n")
+        
+        f.write("─"*80 + "\n")
+        f.write("YEAR-BY-YEAR RESULTS\n")
+        f.write("─"*80 + "\n\n")
+        
+        display_df = df.copy()
+        display_df[['Equity', 'Cash', 'Total', 'Proposed', 'Spending']] = \
+            display_df[['Equity', 'Cash', 'Total', 'Proposed', 'Spending']].round(0)
+        f.write(display_df.to_markdown(index=False, numalign="right", stralign="right", floatfmt=".0f"))
+        f.write("\n")
     
     # Create visualization
     fig = visualize_simulation(df, start, success)
