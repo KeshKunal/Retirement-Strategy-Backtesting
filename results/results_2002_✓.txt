@@ -1,0 +1,42 @@
+================================================================================
+CPWR + FIREWALL STRATEGY - DETAILED RESULTS
+Starting Year: 2002
+================================================================================
+
+Status: ✓ SUCCESS
+Years Survived: 23
+Final Portfolio: $49,511,027
+Buffer Depleted Events: 1
+Sold Equity for Spending: 3
+Refill Events: 18
+Down Years: 5
+
+────────────────────────────────────────────────────────────────────────────────
+YEAR-BY-YEAR RESULTS
+────────────────────────────────────────────────────────────────────────────────
+
+|   Year |   Equity |    Cash |    Total |   Proposed |   Spending |   Binding |   Down Year |   Buffer Depleted |   Sold Equity |   Refill Event |   Equity Return |
+|-------:|---------:|--------:|---------:|-----------:|-----------:|----------:|------------:|------------------:|--------------:|---------------:|----------------:|
+|   2003 | 10703929 | 1250000 | 11953929 |     350000 |     350000 |   desired |       False |             False |         False |           True |              26 |
+|   2004 | 11259645 | 1250000 | 12509645 |     428157 |     385000 |    smooth |       False |             False |         False |           True |               9 |
+|   2005 | 13713389 | 1250000 | 14963389 |     450386 |     423500 |    smooth |       False |             False |         False |           True |               3 |
+|   2006 | 15075651 | 1250000 | 16325651 |     548536 |     465850 |    smooth |       False |             False |         False |           True |              14 |
+|   2007 | 16470830 | 1250000 | 17720830 |     603026 |     512435 |    smooth |       False |             False |         False |           True |               3 |
+|   2008 |  9588189 |  700048 | 10288237 |     658833 |     563678 |    smooth |        True |             False |         False |          False |             -38 |
+|   2009 | 12057185 | 1250000 | 13307185 |     383528 |     383528 |   desired |       False |             False |         False |           True |              23 |
+|   2010 | 12791907 | 1250000 | 14041907 |     482287 |     421880 |    smooth |       False |             False |         False |           True |              13 |
+|   2011 | 12992802 |  801650 | 13794452 |     511676 |     464068 |    smooth |        True |             False |         False |          False |              -0 |
+|   2012 | 13689367 | 1250000 | 14939367 |     519712 |     510475 |    smooth |       False |             False |         False |           True |              14 |
+|   2013 | 18027954 | 1250000 | 19277954 |     547575 |     547575 |   desired |       False |             False |         False |           True |              30 |
+|   2014 | 18872257 | 1250000 | 20122257 |     721118 |     602332 |    smooth |       False |             False |         False |           True |              11 |
+|   2015 | 20508926 |  599183 | 21108110 |     754890 |     662565 |    smooth |        True |             False |         False |          False |              -1 |
+|   2016 | 20666331 | 1250000 | 21916331 |     820357 |     728822 |    smooth |       False |             False |          True |           True |              10 |
+|   2017 | 24439496 | 1250000 | 25689496 |     826653 |     801704 |    smooth |       False |             False |         False |           True |              19 |
+|   2018 | 23159218 |  375488 | 23534707 |     977580 |     881874 |    smooth |        True |             False |         False |          False |              -6 |
+|   2019 | 27837369 | 1250000 | 29087369 |     926369 |     926369 |   desired |       False |             False |          True |           True |              29 |
+|   2020 | 32184373 | 1250000 | 33434373 |    1113495 |    1019006 |    smooth |       False |             False |         False |           True |              16 |
+|   2021 | 42229997 | 1250000 | 43479997 |    1287375 |    1120906 |    smooth |       False |             False |         False |           True |              27 |
+|   2022 | 32346817 |   17343 | 32364160 |    1689200 |    1232997 |    smooth |        True |             False |         False |          False |             -19 |
+|   2023 | 39445291 | 1250000 | 40695291 |    1293873 |     987748 |    liquid |       False |              True |          True |           True |              24 |
+|   2024 | 48527307 | 1250000 | 49777307 |    1577812 |    1086523 |    smooth |       False |             False |         False |           True |              23 |
+|   2025 | 48261027 | 1250000 | 49511027 |    1941092 |    1195175 |    smooth |       False |             False |         False |           True |               4 |

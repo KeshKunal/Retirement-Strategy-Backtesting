@@ -1,0 +1,26 @@
+================================================================================
+CPWR + FIREWALL STRATEGY - DETAILED RESULTS
+Starting Year: 2018
+================================================================================
+
+Status: ✓ SUCCESS
+Years Survived: 7
+Final Portfolio: $20,039,825
+Buffer Depleted Events: 0
+Sold Equity for Spending: 0
+Refill Events: 6
+Down Years: 1
+
+────────────────────────────────────────────────────────────────────────────────
+YEAR-BY-YEAR RESULTS
+────────────────────────────────────────────────────────────────────────────────
+
+|   Year |   Equity |    Cash |    Total |   Proposed |   Spending |   Binding |   Down Year |   Buffer Depleted |   Sold Equity |   Refill Event |   Equity Return |
+|-------:|---------:|--------:|---------:|-----------:|-----------:|----------:|------------:|------------------:|--------------:|---------------:|----------------:|
+|   2019 | 10926048 | 1250000 | 12176048 |     350000 |     350000 |   desired |       False |             False |         False |           True |              29 |
+|   2020 | 12647518 | 1250000 | 13897518 |     437042 |     385000 |    smooth |       False |             False |         False |           True |              16 |
+|   2021 | 16627654 | 1250000 | 17877654 |     505901 |     423500 |    smooth |       False |             False |         False |           True |              27 |
+|   2022 | 12736247 |  799833 | 13536080 |     665106 |     465850 |    smooth |        True |             False |         False |          False |             -19 |
+|   2023 | 15565137 | 1250000 | 16815137 |     509450 |     509450 |   desired |       False |             False |         False |           True |              24 |
+|   2024 | 19029757 | 1250000 | 20279757 |     622606 |     560395 |    smooth |       False |             False |         False |           True |              23 |
+|   2025 | 18789825 | 1250000 | 20039825 |     761190 |     616434 |    smooth |       False |             False |         False |           True |               4 |

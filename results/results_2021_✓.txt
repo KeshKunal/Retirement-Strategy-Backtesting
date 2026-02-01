@@ -1,0 +1,23 @@
+================================================================================
+CPWR + FIREWALL STRATEGY - DETAILED RESULTS
+Starting Year: 2021
+================================================================================
+
+Status: ✓ SUCCESS
+Years Survived: 4
+Final Portfolio: $11,052,557
+Buffer Depleted Events: 0
+Sold Equity for Spending: 0
+Refill Events: 3
+Down Years: 1
+
+────────────────────────────────────────────────────────────────────────────────
+YEAR-BY-YEAR RESULTS
+────────────────────────────────────────────────────────────────────────────────
+
+|   Year |   Equity |    Cash |    Total |   Proposed |   Spending |   Binding |   Down Year |   Buffer Depleted |   Sold Equity |   Refill Event |   Equity Return |
+|-------:|---------:|--------:|---------:|-----------:|-----------:|----------:|------------:|------------------:|--------------:|---------------:|----------------:|
+|   2022 |  6702218 |  918000 |  7620218 |     350000 |     350000 |   desired |        True |             False |         False |          False |             -19 |
+|   2023 |  8105704 | 1250000 |  9355704 |     268089 |     268089 |   desired |       False |             False |         False |           True |              24 |
+|   2024 |  9918793 | 1250000 | 11168793 |     324228 |     294898 |    smooth |       False |             False |         False |           True |              23 |
+|   2025 |  9802557 | 1250000 | 11052557 |     396752 |     324387 |    smooth |       False |             False |         False |           True |               4 |

@@ -1,0 +1,27 @@
+================================================================================
+CPWR + FIREWALL STRATEGY - DETAILED RESULTS
+Starting Year: 2017
+================================================================================
+
+Status: ✓ SUCCESS
+Years Survived: 8
+Final Portfolio: $18,457,877
+Buffer Depleted Events: 0
+Sold Equity for Spending: 0
+Refill Events: 6
+Down Years: 2
+
+────────────────────────────────────────────────────────────────────────────────
+YEAR-BY-YEAR RESULTS
+────────────────────────────────────────────────────────────────────────────────
+
+|   Year |   Equity |    Cash |    Total |   Proposed |   Spending |   Binding |   Down Year |   Buffer Depleted |   Sold Equity |   Refill Event |   Equity Return |
+|-------:|---------:|--------:|---------:|-----------:|-----------:|----------:|------------:|------------------:|--------------:|---------------:|----------------:|
+|   2018 |  8291626 |  918000 |  9209626 |     350000 |     350000 |   desired |        True |             False |         False |          False |              -6 |
+|   2019 | 10015877 | 1250000 | 11265877 |     331665 |     331665 |   desired |       False |             False |         False |           True |              29 |
+|   2020 | 11597776 | 1250000 | 12847776 |     400635 |     364832 |    smooth |       False |             False |         False |           True |              16 |
+|   2021 | 15236411 | 1250000 | 16486411 |     463911 |     401315 |    smooth |       False |             False |         False |           True |              27 |
+|   2022 | 11670600 |  824725 | 12495325 |     609456 |     441446 |    smooth |        True |             False |         False |          False |             -19 |
+|   2023 | 14251858 | 1250000 | 15501858 |     466824 |     466824 |   desired |       False |             False |         False |           True |              24 |
+|   2024 | 17425864 | 1250000 | 18675864 |     570074 |     513506 |    smooth |       False |             False |         False |           True |              23 |
+|   2025 | 17207877 | 1250000 | 18457877 |     697035 |     564857 |    smooth |       False |             False |         False |           True |               4 |

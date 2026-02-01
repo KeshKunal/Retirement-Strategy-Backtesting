@@ -1,0 +1,38 @@
+================================================================================
+CPWR + FIREWALL STRATEGY - DETAILED RESULTS
+Starting Year: 2006
+================================================================================
+
+Status: ✓ SUCCESS
+Years Survived: 19
+Final Portfolio: $28,701,277
+Buffer Depleted Events: 0
+Sold Equity for Spending: 1
+Refill Events: 14
+Down Years: 5
+
+────────────────────────────────────────────────────────────────────────────────
+YEAR-BY-YEAR RESULTS
+────────────────────────────────────────────────────────────────────────────────
+
+|   Year |   Equity |    Cash |    Total |   Proposed |   Spending |   Binding |   Down Year |   Buffer Depleted |   Sold Equity |   Refill Event |   Equity Return |
+|-------:|---------:|--------:|---------:|-----------:|-----------:|----------:|------------:|------------------:|--------------:|---------------:|----------------:|
+|   2007 |  9532682 | 1250000 | 10782682 |     350000 |     350000 |   desired |       False |             False |         False |           True |               3 |
+|   2008 |  5549274 |  886067 |  6435341 |     381307 |     381307 |   desired |        True |             False |         False |          False |             -38 |
+|   2009 |  6913621 | 1250000 |  8163621 |     250000 |     250000 |   desired |       False |             False |         False |           True |              23 |
+|   2010 |  7311822 | 1250000 |  8561822 |     276545 |     275000 |    smooth |       False |             False |         False |           True |              13 |
+|   2011 |  7426653 |  976678 |  8403331 |     292473 |     292473 |   desired |        True |             False |         False |          False |              -0 |
+|   2012 |  7812745 | 1250000 |  9062745 |     297066 |     297066 |   desired |       False |             False |         False |           True |              14 |
+|   2013 | 10299580 | 1250000 | 11549580 |     312510 |     312510 |   desired |       False |             False |         False |           True |              30 |
+|   2014 | 10793023 | 1250000 | 12043023 |     411983 |     343761 |    smooth |       False |             False |         False |           True |              11 |
+|   2015 | 11729032 |  889300 | 12618333 |     431721 |     378137 |    smooth |        True |             False |         False |          False |              -1 |
+|   2016 | 11846474 | 1250000 | 13096474 |     469161 |     415951 |    smooth |       False |             False |         False |           True |              10 |
+|   2017 | 14022072 | 1250000 | 15272072 |     473859 |     457546 |    smooth |       False |             False |         False |           True |              19 |
+|   2018 | 13287517 |  761634 | 14049151 |     560883 |     503300 |    smooth |        True |             False |         False |          False |              -6 |
+|   2019 | 16080150 | 1250000 | 17330150 |     531501 |     531501 |   desired |       False |             False |         False |           True |              29 |
+|   2020 | 18605793 | 1250000 | 19855793 |     643206 |     584651 |    smooth |       False |             False |         False |           True |              16 |
+|   2021 | 24428696 | 1250000 | 25678696 |     744232 |     643116 |    smooth |       False |             False |         False |           True |              27 |
+|   2022 | 18711594 |  553424 | 19265018 |     977148 |     707427 |    smooth |        True |             False |         False |          False |             -19 |
+|   2023 | 22766020 | 1250000 | 24016020 |     748464 |     748464 |   desired |       False |             False |          True |           True |              24 |
+|   2024 | 27818173 | 1250000 | 29068173 |     910641 |     823310 |    smooth |       False |             False |         False |           True |              23 |
+|   2025 | 27451277 | 1250000 | 28701277 |    1112727 |     905641 |    smooth |       False |             False |         False |           True |               4 |

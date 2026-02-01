@@ -5,4 +5,3 @@ notes.txt
 .github
 __pycache__
 /DataSet/*.csv
-results

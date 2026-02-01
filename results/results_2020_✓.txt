@@ -1,0 +1,24 @@
+================================================================================
+CPWR + FIREWALL STRATEGY - DETAILED RESULTS
+Starting Year: 2020
+================================================================================
+
+Status: ✓ SUCCESS
+Years Survived: 5
+Final Portfolio: $14,142,805
+Buffer Depleted Events: 0
+Sold Equity for Spending: 0
+Refill Events: 4
+Down Years: 1
+
+────────────────────────────────────────────────────────────────────────────────
+YEAR-BY-YEAR RESULTS
+────────────────────────────────────────────────────────────────────────────────
+
+|   Year |   Equity |    Cash |    Total |   Proposed |   Spending |   Binding |   Down Year |   Buffer Depleted |   Sold Equity |   Refill Event |   Equity Return |
+|-------:|---------:|--------:|---------:|-----------:|-----------:|----------:|------------:|------------------:|--------------:|---------------:|----------------:|
+|   2021 | 11453155 | 1250000 | 12703155 |     350000 |     350000 |   desired |       False |             False |         False |           True |              27 |
+|   2022 |  8772747 |  882300 |  9655047 |     458126 |     385000 |    smooth |        True |             False |         False |          False |             -19 |
+|   2023 | 10670295 | 1250000 | 11920295 |     350910 |     350910 |   desired |       False |             False |         False |           True |              24 |
+|   2024 | 13051368 | 1250000 | 14301368 |     426812 |     386001 |    smooth |       False |             False |         False |           True |              23 |
+|   2025 | 12892805 | 1250000 | 14142805 |     522055 |     424601 |    smooth |       False |             False |         False |           True |               4 |

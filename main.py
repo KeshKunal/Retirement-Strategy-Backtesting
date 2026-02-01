@@ -435,7 +435,7 @@ print("Initial Portfolio: $10,000,000 | CPWR: 4% | Floor: $250,000 | Buffer: 5 y
 print("="*80)
 print()
 
-start_years = [2003]
+start_years = np.arange(1999, 2024, 1)
 all_results = {}
 
 for start in start_years:
@@ -500,35 +500,3 @@ for start in start_years:
 print("\n" + "="*80)
 print("BACKTEST COMPLETE")
 print("="*80)
-
-# Create comparison chart
-if len(all_results) > 1:
-    fig, axes = plt.subplots(2, 2, figsize=(16, 10))
-    fig.suptitle('CPWR + Firewall Strategy: Multi-Scenario Comparison', fontsize=16, fontweight='bold')
-    
-    for idx, (start, (df, success)) in enumerate(all_results.items()):
-        ax = axes[idx // 2, idx % 2]
-        
-        # Plot total portfolio value
-        ax.plot(df['Year'], df['Total']/1e6, linewidth=2.5, color='#F18F01', label='Total')
-        ax.fill_between(df['Year'], 0, df['Equity']/1e6, alpha=0.5, color='#2E86AB', label='Equity')
-        ax.fill_between(df['Year'], df['Equity']/1e6, df['Total']/1e6, alpha=0.5, color='#A23B72', label='Cash')
-        
-        # Mark sold low events
-        buffer_depleted_years = df[df['Buffer Depleted'] == True]['Year']
-        for year in buffer_depleted_years:
-            year_data = df[df['Year'] == year]
-            ax.scatter(year, year_data['Total'].values[0]/1e6, color='red', s=100, zorder=5, marker='X')
-        
-        ax.axhline(y=10, color='gray', linestyle='--', alpha=0.5)
-        ax.set_xlabel('Year', fontweight='bold')
-        ax.set_ylabel('Portfolio Value ($M)', fontweight='bold')
-        ax.set_title(f'Starting {start} | {"✓ SUCCESS" if success else "✗ FAILED"}', fontweight='bold')
-        ax.legend(loc='upper left')
-        ax.grid(True, alpha=0.3)
-        ax.set_xlim(df['Year'].min(), df['Year'].max())
-    
-    plt.tight_layout()
-    plt.savefig('comparison_all_scenarios.png', dpi=150, bbox_inches='tight')
-    print("\n📊 Comparison chart saved as: comparison_all_scenarios.png")
-    plt.close(fig)

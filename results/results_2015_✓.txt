@@ -1,0 +1,29 @@
+================================================================================
+CPWR + FIREWALL STRATEGY - DETAILED RESULTS
+Starting Year: 2015
+================================================================================
+
+Status: ✓ SUCCESS
+Years Survived: 10
+Final Portfolio: $22,472,151
+Buffer Depleted Events: 0
+Sold Equity for Spending: 0
+Refill Events: 8
+Down Years: 2
+
+────────────────────────────────────────────────────────────────────────────────
+YEAR-BY-YEAR RESULTS
+────────────────────────────────────────────────────────────────────────────────
+
+|   Year |   Equity |    Cash |    Total |   Proposed |   Spending |   Binding |   Down Year |   Buffer Depleted |   Sold Equity |   Refill Event |   Equity Return |
+|-------:|---------:|--------:|---------:|-----------:|-----------:|----------:|------------:|------------------:|--------------:|---------------:|----------------:|
+|   2016 |  9125518 | 1250000 | 10375518 |     350000 |     350000 |   desired |       False |             False |         False |           True |              10 |
+|   2017 | 10794338 | 1250000 | 12044338 |     365021 |     365021 |   desired |       False |             False |         False |           True |              19 |
+|   2018 | 10228870 |  865447 | 11094317 |     431774 |     401523 |    smooth |        True |             False |         False |          False |              -6 |
+|   2019 | 12375648 | 1250000 | 13625648 |     409155 |     409155 |   desired |       False |             False |         False |           True |              29 |
+|   2020 | 14325087 | 1250000 | 15575087 |     495026 |     450070 |    smooth |       False |             False |         False |           True |              16 |
+|   2021 | 18814120 | 1250000 | 20064120 |     573003 |     495077 |    smooth |       False |             False |         False |           True |              27 |
+|   2022 | 14411010 |  719523 | 15130533 |     752565 |     544585 |    smooth |        True |             False |         False |          False |             -19 |
+|   2023 | 17587062 | 1250000 | 18837062 |     576440 |     576440 |   desired |       False |             False |         False |           True |              24 |
+|   2024 | 21497580 | 1250000 | 22747580 |     703482 |     634084 |    smooth |       False |             False |         False |           True |              23 |
+|   2025 | 21222151 | 1250000 | 22472151 |     859903 |     697493 |    smooth |       False |             False |         False |           True |               4 |
